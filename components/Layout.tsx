@@ -36,7 +36,7 @@ const Layout = ({ children, title = 'This is the default title' }: Props) => {
           {data?.user ? (
             <button onClick={() => signOut()}>Sign Out</button>
           ) : (
-            <button onClick={() => signIn('google')}>Sign In</button>
+            <button onClick={() => signIn()}>Sign In</button>
           )}
         </nav>
       </header>
