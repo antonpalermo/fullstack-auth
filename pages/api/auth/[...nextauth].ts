@@ -11,9 +11,6 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       }),
     ],
-    pages: {
-      signIn: '/auth/login',
-    },
   });
 };
 
