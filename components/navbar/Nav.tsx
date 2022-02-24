@@ -1,17 +1,12 @@
 import React from 'react'
-import Link from 'next/link'
+import { NavButton } from './NavButton'
 
 export const Nav = () => {
   return (
     <header>
       <nav>
-        <Link href={'/'} passHref>
-          <a>Home</a>
-        </Link>{' '}
-        |{' '}
-        <Link href={'/about'} passHref>
-          <a>About</a>
-        </Link>
+        <NavButton href="/">Home</NavButton> |{' '}
+        <NavButton href="/about">About</NavButton> |{' '}
       </nav>
     </header>
   )
