@@ -1,5 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
+import { Nav } from './navbar/Nav'
 
 type MainLayoutProps = {
   title?: string
@@ -12,6 +13,7 @@ export const MainLayout = ({ title, children }: MainLayoutProps) => {
       <Head>
         <title>{title}</title>
       </Head>
+      <Nav />
       <div>{children}</div>
     </>
   )
