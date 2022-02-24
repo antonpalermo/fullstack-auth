@@ -15,9 +15,9 @@ type AppProps = NextAppProps & {
 const App = ({ Component, pageProps: { session, ...rest } }: AppProps) => {
   const getBaseLayout = Component.getBaseLayout ?? (page => page)
 
-  return getBaseLayout(
+  return (
     <SessionProvider session={session}>
-      <Component {...rest} />
+      {getBaseLayout(<Component {...rest} />)}
     </SessionProvider>
   )
 }
