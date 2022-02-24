@@ -10,6 +10,7 @@ export const Nav = () => {
       <nav>
         <NavButton href="/">Home</NavButton> |{' '}
         <NavButton href="/about">About</NavButton> |{' '}
+        <NavButton href="/users">Users</NavButton> |{' '}
         <button onClick={() => (session ? signOut() : signIn())}>
           {session ? 'Sign Out' : 'Sign In'}
         </button>
