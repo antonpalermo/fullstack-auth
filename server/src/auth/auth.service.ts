@@ -1,36 +1,25 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { sampleUsers, User } from './utils/user'
-
-type Credential = {
-  identity: string
-  password: string
-}
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { FindOneOptions, Repository } from 'typeorm'
+import { CreateUserDto } from './dto/create-user.dto'
+import { User } from './entities/user.entity'
 
 @Injectable()
 export class AuthService {
-  async find(identity: string): Promise<User> {
-    return await new Promise(async res =>
-      res(
-        sampleUsers.find(user =>
-          identity.includes('@')
-            ? user.email === identity
-            : user.username === identity
-        )
-      )
-    )
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>
+  ) {}
+
+  async create(user: CreateUserDto): Promise<User> {
+    return await this.userRepo.save(user)
   }
 
-  async validate(credential: Credential): Promise<Record<string, any>> {
-    const { password, ...user } = await this.find(credential.identity)
+  async findOne(options?: FindOneOptions<User>): Promise<User> {
+    return await this.userRepo.findOne(options)
+  }
 
-    if (!(user && credential.password === password)) {
-      throw new UnauthorizedException({
-        message: credential.identity.includes('@')
-          ? 'Invalid Email address or Password'
-          : 'Invalid Username or Password'
-      })
-    }
-
-    return user
+  async findAll(): Promise<User[]> {
+    return await this.userRepo.find()
   }
 }

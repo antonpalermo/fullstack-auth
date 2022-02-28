@@ -8,12 +8,12 @@ export class User {
   @Column()
   name: string
 
-  @Column()
+  @Column({ unique: true })
   email: string
 
-  @Column('timestamp')
+  @Column('timestamp', { nullable: true })
   emailVerified: Date
 
-  @Column()
+  @Column({ nullable: true })
   image: string
 }
