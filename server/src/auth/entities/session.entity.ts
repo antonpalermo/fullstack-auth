@@ -1,16 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { User } from './user.entity'
 
 @Entity({ name: 'sessions' })
 export class Session {
   @PrimaryGeneratedColumn('identity')
   id: string
 
-  @Column()
-  userId: string
-
   @Column('timestamp')
   expires: Date
 
   @Column()
   sessionToken: string
+
+  @ManyToOne(() => User, user => user.sessions)
+  user!: User
 }

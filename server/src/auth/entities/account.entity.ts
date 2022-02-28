@@ -1,12 +1,16 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  Generated,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm'
+import { User } from './user.entity'
 
 @Entity({ name: 'accounts' })
 export class Account {
   @PrimaryGeneratedColumn('identity')
   id: string
-
-  @Generated('uuid')
-  userId: string
 
   @Column()
   type: string
@@ -15,7 +19,7 @@ export class Account {
   provider: string
 
   @Column()
-  providerAccountId: string
+  provider_account_id: string
 
   @Column()
   refresh_token: string
@@ -43,4 +47,9 @@ export class Account {
 
   @Column()
   oauth_token: string
+
+  @ManyToOne(() => User, user => user.accounts, {
+    createForeignKeyConstraints: true
+  })
+  user!: User
 }
