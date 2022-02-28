@@ -11,6 +11,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { AuthService } from './auth.service'
+import { CreateAccountDto } from './dto/create-account.dto'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { Account } from './entities/account.entity'
@@ -29,6 +30,11 @@ export class AuthController {
     return await this.authService.create(user)
   }
 
+  @Post('link')
+  async linktAccount(@Body() account: CreateAccountDto) {
+    return await this.accountRepo.save(account)
+  }
+
   @Patch('update')
   async updateUser(@Body() user: UpdateUserDto): Promise<User> {
     return await this.authService.update({ user })
@@ -37,6 +43,11 @@ export class AuthController {
   @Delete('delete')
   async deleteUser(@Query('id') id: string) {
     return await this.authService.delete(id)
+  }
+
+  @Delete('link')
+  async unlinkAccount(id: string) {
+    return await this.accountRepo.delete(id)
   }
 
   // http://localhost:3000/auth/user?id="some_id"
