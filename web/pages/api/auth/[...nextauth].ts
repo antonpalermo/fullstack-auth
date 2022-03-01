@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
+import { DataAdapter } from '../../../utils/database-adapter'
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return await NextAuth(req, res, {
@@ -43,7 +44,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET
       })
-    ]
+    ],
+    adapter: DataAdapter({ baseUrl: process.env.API_ENDPOINT })
   })
 }
 
