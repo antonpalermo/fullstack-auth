@@ -57,6 +57,40 @@ export const DataAdapter = (
     })
   }
 
+  const unlinkAccount = async (
+    providerAccountId: Pick<Account, 'provider' | 'providerAccountId'>
+  ): Promise<void> => {
+    axiosInstance.delete(`/auth/link?id=${providerAccountId}`)
+  }
+
+  const createSession = async (session: {
+    sessionToken: string
+    userId: string
+    expires: Date
+  }): Promise<AdapterSession> => {
+    return await axiosInstance.post('/auth/session', {
+      ...session
+    })
+  }
+
+  const updateSession = async (
+    session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>
+  ): Promise<AdapterSession> => {
+    return await axiosInstance.patch('/auth/session', { session })
+  }
+
+  const getSessionAndUser = async (
+    sessionToken: string
+  ): Promise<SessionUser> => {
+    return await axiosInstance.get(
+      `/auth/user_session?sessionToken=${sessionToken}`
+    )
+  }
+
+  const deleteSession = async (sessionToken: string): Promise<void> => {
+    return await axiosInstance.delete(`/auth/session?id=${sessionToken}`)
+  }
+
   return {
     createUser,
     getUser,
@@ -64,23 +98,10 @@ export const DataAdapter = (
     getUserByAccount,
     updateUser,
     linkAccount,
-    createSession: async (session: {
-      sessionToken: string
-      userId: string
-      expires: Date
-    }): Promise<AdapterSession> => {
-      return await new Promise(res => res)
-    },
-    getSessionAndUser: async (sessionToken: string): Promise<SessionUser> => {
-      return new Promise(res => res)
-    },
-    updateSession: async (
-      session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>
-    ): Promise<AdapterSession> => {
-      return
-    },
-    deleteSession: async (sessionToken: string): Promise<void> => {
-      return await new Promise(res => res)
-    }
+    unlinkAccount,
+    createSession,
+    updateSession,
+    getSessionAndUser,
+    deleteSession
   }
 }
