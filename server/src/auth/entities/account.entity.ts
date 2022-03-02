@@ -1,52 +1,64 @@
 import {
   Column,
   Entity,
-  Generated,
   ManyToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  ValueTransformer
 } from 'typeorm'
 import { User } from './user.entity'
 
+export const transformer: Record<'date' | 'bigint', ValueTransformer> = {
+  date: {
+    from: (date: string | null) => date && new Date(parseInt(date, 10)),
+    to: (date?: Date) => date?.valueOf().toString()
+  },
+  bigint: {
+    from: (bigInt: string | null) => bigInt && parseInt(bigInt, 10),
+    to: (bigInt?: number) => bigInt?.toString()
+  }
+}
+
 @Entity({ name: 'accounts' })
 export class Account {
-  @PrimaryGeneratedColumn('identity')
-  id: string
+  @PrimaryGeneratedColumn('uuid')
+  id!: string
+
+  @Column({ type: 'uuid' })
+  userId!: string
 
   @Column()
-  type: string
+  type!: string
 
   @Column()
-  provider: string
+  provider!: string
 
   @Column()
-  provider_account_id: string
+  providerAccountId!: string
 
-  @Column()
-  refresh_token: string
+  @Column({ type: 'varchar', nullable: true })
+  refresh_token!: string
 
-  @Column()
-  access_token: string
+  @Column({ type: 'varchar', nullable: true })
+  access_token!: string | null
 
-  @Column('int')
-  expires_at: number
+  @Column({
+    nullable: true,
+    type: 'bigint',
+    transformer: transformer.bigint
+  })
+  expires_at!: number | null
 
-  @Column()
-  token_type: string
+  @Column({ type: 'varchar', nullable: true })
+  token_type!: string | null
 
-  @Column()
-  scope: string
+  @Column({ type: 'varchar', nullable: true })
+  scope!: string | null
 
-  @Column()
-  id_token: string
+  @Column({ type: 'varchar', nullable: true })
+  id_token!: string | null
 
-  @Column()
-  session_state: string
-
-  @Column()
-  oauth_token_secret: string
-
-  @Column()
-  oauth_token: string
+  @Column({ type: 'varchar', nullable: true })
+  session_state!: string | null
 
   @ManyToOne(() => User, user => user.accounts, {
     createForeignKeyConstraints: true

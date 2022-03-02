@@ -1,27 +1,27 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { Account } from './account.entity'
+import { Account, transformer } from './account.entity'
 import { Session } from './session.entity'
 
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id!: string
 
-  @Column()
-  name: string
+  @Column({ type: 'varchar', nullable: true })
+  name!: string | null
 
-  @Column({ unique: true })
-  email: string
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  email!: string | null
 
-  @Column('timestamp', { nullable: true })
-  emailVerified: Date
+  @Column({ type: 'varchar', nullable: true, transformer: transformer.date })
+  emailVerified!: string | null
 
-  @Column({ nullable: true })
-  image: string
+  @Column({ type: 'varchar', nullable: true })
+  image!: string | null
 
-  @OneToMany(() => Session, session => session.user)
-  sessions!: Account[]
+  @OneToMany(() => Session, session => session.userId)
+  sessions!: Session[]
 
-  @OneToMany(() => Account, account => account.user)
+  @OneToMany(() => Account, account => account.userId)
   accounts!: Account[]
 }

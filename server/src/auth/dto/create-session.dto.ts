@@ -1,4 +1,6 @@
 export class CreateSessionDto {
-  expires: Date
-  sessionToken: string
+  id?: string
+  sessionToken?: string
+  userId?: string
+  expires?: string
 }

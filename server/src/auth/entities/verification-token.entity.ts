@@ -1,13 +1,17 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { transformer } from './account.entity'
 
 @Entity({ name: 'verification_tokens' })
 export class VerificationToken {
-  @PrimaryGeneratedColumn('identity')
-  identifier: string
+  @PrimaryGeneratedColumn('uuid')
+  id!: string
 
   @Column()
-  token: string
+  token!: string
 
-  @Column('timestamp')
-  expires: Date
+  @Column()
+  identifier!: string
+
+  @Column({ transformer: transformer.date })
+  expires!: string
 }

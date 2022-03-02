@@ -41,8 +41,8 @@ export class AuthController {
   }
 
   @Post('session')
-  async createSession(@Body() session: CreateSessionDto) {
-    return await this.sessionRepo.save(session)
+  async createSession(@Body() data: CreateSessionDto) {
+    return await this.sessionRepo.save(data)
   }
 
   @Patch('update')
@@ -51,8 +51,8 @@ export class AuthController {
   }
 
   @Patch('session')
-  async updateSession(@Body() session: UpdateSessionDto): Promise<Session> {
-    return await this.sessionRepo.save(session)
+  async updateSession(@Body() data: UpdateSessionDto): Promise<Session> {
+    return await this.sessionRepo.save(data)
   }
 
   @Delete('delete')
@@ -82,7 +82,7 @@ export class AuthController {
   @Get('account')
   async account(@Query('provider_id') provider_id?: string): Promise<Account> {
     const userAccount = await this.accountRepo.findOne({
-      where: { provider_account_id: provider_id },
+      where: [{ provider_account_id: provider_id }, { provider: provider_id }],
       relations: ['users']
     })
 

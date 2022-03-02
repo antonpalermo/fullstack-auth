@@ -1,11 +1,18 @@
+import axios from 'axios'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import NextAuth from 'next-auth'
+import NextAuth, { Awaitable, User } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
-import { DataAdapter } from '../../../utils/database-adapter'
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const api = axios.create({
+    baseURL: process.env.API_ENDPOINT,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
   return await NextAuth(req, res, {
     providers: [
       Credentials({
@@ -45,7 +52,49 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET
       })
     ],
-    adapter: DataAdapter({ baseUrl: process.env.API_ENDPOINT })
+    adapter: {
+      createUser: async user => {
+        return await api.post('/auth/create', user)
+      },
+      getUser: async (id: string) => {
+        return await api.get('/auth/user?id=' + id)
+      },
+      getUserByEmail: async (email: string) => {
+        return await api.get('/auth/user?email=' + email)
+      },
+      getUserByAccount: async providerAccountId => {
+        console.log(providerAccountId)
+        return await api.get(
+          '/auth/account?provider_id=' + providerAccountId.providerAccountId
+        )
+      },
+      updateUser: async user => {
+        return await api.patch('auth/update', user)
+      },
+      deleteUser: async userId => {
+        await api.delete('/auth/delete?id=' + userId)
+      },
+      linkAccount: async account => {
+        await api.post('/auth/link', account)
+      },
+      unlinkAccount: async providerAccountId => {
+        await api.delete('auth/link?id=' + providerAccountId)
+      },
+      createSession: async session => {
+        return await api.post('/auth/session', session)
+      },
+      updateSession: async session => {
+        await api.patch('/auth/session', session)
+        return null
+      },
+      getSessionAndUser: async sessionToken => {
+        return await api.get('/auth/user_session?sessionToken=' + sessionToken)
+      },
+      deleteSession: async sessionToken => {
+        api.delete('/auth/session?sessionToken=' + sessionToken)
+      }
+    },
+    callbacks: {}
   })
 }
 
